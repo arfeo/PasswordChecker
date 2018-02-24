@@ -1,6 +1,6 @@
 # PasswordChecker
 
-`Google Chrome` extension for checking passwords strength and generating passwrods.
+`Google Chrome` extension for checking passwords strength and generating passwords.
 
 Supports multiple `password` inputs on a single page.
 
