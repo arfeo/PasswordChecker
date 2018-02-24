@@ -23,43 +23,37 @@ const checkPasswordStrength = p => {
 	}
 }
 
-const inputKeyUpEventHandler = (i, c, b) => {
-	getState()
-		.then(status => {
+const inputKeyUpEventHandler = async (i, c, b) => {
+	
+	// If password check is on...
+	if (await getState() === true) {
 
-			// If password check is on...
-			if (status === true) {
-
-				// ...and the input has not a null value
-				if ((i.value && !i.hasAttribute('defaultValue')) || (i.value && i.hasAttribute('defaultValue') && (i.value !== i.defaultValue))) {
-					const strength = checkPasswordStrength(i.value)
-					const balloon_text = b.querySelector('.password-checker__balloon-text')
-					let strengthText = ''
-					
-					c.style.visibility = 'visible'
-					c.className = `password-checker__icon ${strength}`
-					
-					if (strength === 'strong') {
-						strengthText = 'Strong password'
-					} else if (strength === 'good') {
-						strengthText = 'Good password'
-					} else {
-						strengthText = 'Password is too weak'
-					}
-
-					// Append a new text message to the balloon
-					balloon_text.innerHTML = ''
-					balloon_text.appendChild(document.createTextNode(strengthText))
-				} else {
-					c.style.visibility = 'hidden'
-					b.style.display = 'none'
-					c.className = `password-checker__icon`
-				}
+		// ...and the input has not a null value
+		if ((i.value && !i.hasAttribute('defaultValue')) || (i.value && i.hasAttribute('defaultValue') && (i.value !== i.defaultValue))) {
+			const strength = checkPasswordStrength(i.value)
+			const balloon_text = b.querySelector('.password-checker__balloon-text')
+			let strengthText = ''
+			
+			c.style.visibility = 'visible'
+			c.className = `password-checker__icon ${strength}`
+			
+			if (strength === 'strong') {
+				strengthText = 'Strong password'
+			} else if (strength === 'good') {
+				strengthText = 'Good password'
+			} else {
+				strengthText = 'Password is too weak'
 			}
-		})
-		.catch(err => {
-			console.error(err)
-		})
+
+			// Append a new text message to the balloon
+			balloon_text.innerHTML = ''
+			balloon_text.appendChild(document.createTextNode(strengthText))
+		} else {
+			c.style.visibility = 'hidden'
+			b.style.display = 'none'
+			c.className = `password-checker__icon`
+		}
+	}
 }
 
 const iconClickEventHandler = b => {
@@ -145,16 +139,10 @@ chrome.runtime.onMessage.addListener(
 	}
 )
 
-window.onload = () => {
-	getState()
-		.then(status => {
+window.onload = async () => {
 
-			// If password check is on -- initialize containers
-			if (status === true) {
-				constructContainers()
-			}
-		})
-		.catch(err => {
-			console.error(err)
-		})
+	// If password check is on -- initialize containers
+	if (await getState() === true) {
+		constructContainers()
+	}
 }
